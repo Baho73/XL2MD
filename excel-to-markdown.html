@@ -13,30 +13,99 @@
 
         body {
             font-family: 'Courier New', monospace;
-            background-color: #c0c0c0;
             padding: 10px;
             font-size: 12px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Светлая тема */
+        body.light {
+            background-color: #c0c0c0;
+            color: #000;
+        }
+
+        /* Темная тема */
+        body.dark {
+            background-color: #2b2b2b;
+            color: #00ff00;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
-            background-color: #c0c0c0;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
         }
 
         h1 {
             font-size: 16px;
             font-weight: bold;
-            margin-bottom: 10px;
-            color: #000;
         }
 
-        .panel {
-            background-color: #c0c0c0;
-            border: 2px solid;
-            border-color: #dfdfdf #808080 #808080 #dfdfdf;
-            padding: 8px;
+        .theme-switcher {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-toggle {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            padding: 4px 12px;
+            cursor: pointer;
+        }
+
+        /* Верхняя секция с input и кнопками */
+        .input-section {
+            display: flex;
+            gap: 8px;
             margin-bottom: 10px;
+        }
+
+        .input-panel {
+            flex: 1;
+            border: 2px solid;
+            padding: 8px;
+        }
+
+        body.light .input-panel {
+            background-color: #c0c0c0;
+            border-color: #dfdfdf #808080 #808080 #dfdfdf;
+        }
+
+        body.dark .input-panel {
+            background-color: #3c3c3c;
+            border-color: #1a1a1a #4a4a4a #4a4a4a #1a1a1a;
+        }
+
+        .buttons-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            border: 2px solid;
+            padding: 8px;
+            min-width: 100px;
+        }
+
+        body.light .buttons-panel {
+            background-color: #c0c0c0;
+            border-color: #dfdfdf #808080 #808080 #dfdfdf;
+        }
+
+        body.dark .buttons-panel {
+            background-color: #3c3c3c;
+            border-color: #1a1a1a #4a4a4a #4a4a4a #1a1a1a;
+        }
+
+        .label {
+            font-weight: bold;
+            margin-bottom: 4px;
+            display: block;
         }
 
         textarea {
@@ -44,19 +113,49 @@
             height: 200px;
             font-family: 'Courier New', monospace;
             font-size: 11px;
-            background-color: #fff;
             border: 2px solid;
-            border-color: #808080 #dfdfdf #dfdfdf #808080;
             padding: 4px;
             resize: vertical;
         }
 
+        body.light textarea {
+            background-color: #fff;
+            border-color: #808080 #dfdfdf #dfdfdf #808080;
+            color: #000;
+        }
+
+        body.dark textarea {
+            background-color: #1a1a1a;
+            border-color: #000 #4a4a4a #4a4a4a #000;
+            color: #00ff00;
+        }
+
+        textarea.no-wrap {
+            white-space: nowrap;
+            overflow-x: auto;
+        }
+
+        /* Чекбоксы */
         .controls {
-            margin: 10px 0;
+            margin-bottom: 10px;
+            border: 2px solid;
+            padding: 8px;
+        }
+
+        body.light .controls {
+            background-color: #c0c0c0;
+            border-color: #dfdfdf #808080 #808080 #dfdfdf;
+        }
+
+        body.dark .controls {
+            background-color: #3c3c3c;
+            border-color: #1a1a1a #4a4a4a #4a4a4a #1a1a1a;
         }
 
         .checkbox-group {
-            margin: 8px 0;
+            display: inline-block;
+            margin-right: 20px;
+            margin-bottom: 4px;
         }
 
         input[type="checkbox"] {
@@ -68,15 +167,27 @@
             user-select: none;
         }
 
+        /* Кнопки */
         button {
             font-family: 'Courier New', monospace;
             font-size: 12px;
             padding: 4px 16px;
-            background-color: #c0c0c0;
             border: 2px solid;
-            border-color: #dfdfdf #000 #000 #dfdfdf;
             cursor: pointer;
             min-width: 80px;
+            width: 100%;
+        }
+
+        body.light button {
+            background-color: #c0c0c0;
+            border-color: #dfdfdf #000 #000 #dfdfdf;
+            color: #000;
+        }
+
+        body.dark button {
+            background-color: #3c3c3c;
+            border-color: #4a4a4a #000 #000 #4a4a4a;
+            color: #00ff00;
         }
 
         button:active {
@@ -84,73 +195,267 @@
             padding: 5px 15px 3px 17px;
         }
 
+        body.dark button:active {
+            border-color: #000 #4a4a4a #4a4a4a #000;
+        }
+
         button:disabled {
-            color: #808080;
+            opacity: 0.5;
             cursor: default;
         }
 
-        .button-group {
-            margin-top: 6px;
+        /* Excel-подобная таблица */
+        .output-section {
+            border: 2px solid;
+            padding: 8px;
         }
 
-        .label {
+        body.light .output-section {
+            background-color: #c0c0c0;
+            border-color: #dfdfdf #808080 #808080 #dfdfdf;
+        }
+
+        body.dark .output-section {
+            background-color: #3c3c3c;
+            border-color: #1a1a1a #4a4a4a #4a4a4a #1a1a1a;
+        }
+
+        .excel-table-wrapper {
+            margin-top: 8px;
+            border: 2px solid;
+            overflow: auto;
+            max-height: 400px;
+        }
+
+        body.light .excel-table-wrapper {
+            background-color: #fff;
+            border-color: #808080 #dfdfdf #dfdfdf #808080;
+        }
+
+        body.dark .excel-table-wrapper {
+            background-color: #1a1a1a;
+            border-color: #000 #4a4a4a #4a4a4a #000;
+        }
+
+        .excel-table {
+            border-collapse: collapse;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+        }
+
+        .excel-table th,
+        .excel-table td {
+            border: 1px solid;
+            padding: 4px 8px;
+            text-align: left;
+            cursor: default;
+            white-space: nowrap;
+        }
+
+        body.light .excel-table th,
+        body.light .excel-table td {
+            border-color: #c0c0c0;
+        }
+
+        body.dark .excel-table th,
+        body.dark .excel-table td {
+            border-color: #4a4a4a;
+        }
+
+        .excel-table th {
             font-weight: bold;
-            margin-bottom: 4px;
-            display: block;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
         }
 
-        hr {
-            border: none;
-            border-top: 2px solid;
-            border-color: #808080 #dfdfdf;
-            margin: 10px 0;
+        body.light .excel-table th {
+            background-color: #dfdfdf;
+        }
+
+        body.dark .excel-table th {
+            background-color: #4a4a4a;
+        }
+
+        .excel-table .row-header {
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+            min-width: 40px;
+        }
+
+        body.light .excel-table .row-header {
+            background-color: #dfdfdf;
+        }
+
+        body.dark .excel-table .row-header {
+            background-color: #4a4a4a;
+        }
+
+        .excel-table th:hover,
+        .excel-table .row-header:hover {
+            opacity: 0.8;
+        }
+
+        .excel-table .selected {
+            background-color: #0000ff !important;
+            color: #fff !important;
+        }
+
+        /* Контекстное меню */
+        .context-menu {
+            position: fixed;
+            display: none;
+            border: 2px solid;
+            padding: 4px 0;
+            z-index: 1000;
+            min-width: 120px;
+        }
+
+        body.light .context-menu {
+            background-color: #c0c0c0;
+            border-color: #dfdfdf #000 #000 #dfdfdf;
+        }
+
+        body.dark .context-menu {
+            background-color: #3c3c3c;
+            border-color: #4a4a4a #000 #000 #4a4a4a;
+        }
+
+        .context-menu-item {
+            padding: 4px 12px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        body.light .context-menu-item:hover {
+            background-color: #000080;
+            color: #fff;
+        }
+
+        body.dark .context-menu-item:hover {
+            background-color: #006400;
+            color: #00ff00;
+        }
+
+        .bottom-buttons {
+            margin-top: 8px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .bottom-buttons button {
+            width: auto;
+            min-width: 80px;
         }
     </style>
 </head>
-<body>
+<body class="light">
     <div class="container">
-        <h1>Excel to Markdown Converter</h1>
+        <div class="header">
+            <h1>Excel to Markdown Converter</h1>
+            <div class="theme-switcher">
+                <span>Theme:</span>
+                <button class="theme-toggle" onclick="toggleTheme()">Light/Dark</button>
+            </div>
+        </div>
 
-        <div class="panel">
-            <label class="label" for="input">Вставьте таблицу из Excel:</label>
-            <textarea id="input" placeholder="Ctrl+V для вставки..."></textarea>
-            <div class="button-group">
+        <!-- Верхняя секция: input + кнопки -->
+        <div class="input-section">
+            <div class="input-panel">
+                <label class="label" for="input">Вставьте таблицу из Excel:</label>
+                <textarea id="input" placeholder="Ctrl+V для вставки..."></textarea>
+            </div>
+            <div class="buttons-panel">
                 <button onclick="clearInput()">Clear</button>
                 <button onclick="convertToMarkdown()">Convert</button>
+                <button id="repeatBtn" onclick="repeatDeletion()" disabled>Repeat</button>
             </div>
         </div>
 
-        <div class="panel">
-            <div class="controls">
-                <div class="checkbox-group">
-                    <input type="checkbox" id="noHeader" onchange="convertToMarkdown()">
-                    <label for="noHeader">Не включать заголовок</label>
-                </div>
-                <div class="checkbox-group">
-                    <input type="checkbox" id="noSeparator" onchange="handleSeparatorChange()">
-                    <label for="noSeparator">Не включать горизонтальный разделитель</label>
-                </div>
-                <div class="checkbox-group">
-                    <input type="checkbox" id="alignWidth" onchange="convertToMarkdown()">
-                    <label for="alignWidth">Выровнять по ширине</label>
-                </div>
-                <div class="checkbox-group">
-                    <input type="checkbox" id="multiline" onchange="handleMultilineChange()">
-                    <label for="multiline">Многострочный режим</label>
-                </div>
+        <!-- Чекбоксы настроек -->
+        <div class="controls">
+            <div class="checkbox-group">
+                <input type="checkbox" id="noSeparator" onchange="handleSeparatorChange()">
+                <label for="noSeparator">Не включать горизонтальный разделитель</label>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="alignWidth" onchange="convertToMarkdown()">
+                <label for="alignWidth">Выровнять по ширине</label>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="multiline" onchange="handleMultilineChange()">
+                <label for="multiline">Многострочный режим</label>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="wrapLines" onchange="toggleWrap()">
+                <label for="wrapLines">Переносить по строкам</label>
             </div>
         </div>
 
-        <div class="panel">
-            <label class="label" for="output">Результат (Markdown):</label>
-            <textarea id="output" readonly></textarea>
-            <div class="button-group">
+        <!-- Нижняя секция: таблица с заголовками -->
+        <div class="output-section">
+            <label class="label">Результат (Markdown):</label>
+            <div class="excel-table-wrapper" id="tableWrapper">
+                <table class="excel-table" id="markdownTable">
+                    <thead id="tableHeader"></thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+            <div class="bottom-buttons">
                 <button onclick="copyToClipboard()">Copy</button>
             </div>
         </div>
     </div>
 
+    <!-- Контекстное меню -->
+    <div class="context-menu" id="contextMenu">
+        <div class="context-menu-item" onclick="deleteSelected()">Удалить</div>
+    </div>
+
     <script>
+        // Глобальные переменные
+        let tableData = [];
+        let selectedColumns = new Set();
+        let selectedRows = new Set();
+        let lastSelectedColumn = -1;
+        let lastSelectedRow = -1;
+        let deletedColumns = [];
+
+        // Переключение темы
+        function toggleTheme() {
+            const body = document.body;
+            if (body.classList.contains('light')) {
+                body.classList.remove('light');
+                body.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.classList.remove('dark');
+                body.classList.add('light');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Загрузка сохраненной темы
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.body.classList.remove('light', 'dark');
+            document.body.classList.add(savedTheme);
+        });
+
+        // Переключение переноса строк
+        function toggleWrap() {
+            const wrapper = document.getElementById('tableWrapper');
+            const checkbox = document.getElementById('wrapLines');
+
+            if (checkbox.checked) {
+                wrapper.style.whiteSpace = 'normal';
+            } else {
+                wrapper.style.whiteSpace = 'nowrap';
+            }
+        }
+
         // Обработка взаимоисключающих опций
         function handleSeparatorChange() {
             const noSeparator = document.getElementById('noSeparator');
@@ -182,26 +487,12 @@
 
         function clearInput() {
             document.getElementById('input').value = '';
-            document.getElementById('output').value = '';
-        }
-
-        function copyToClipboard() {
-            const output = document.getElementById('output');
-            output.select();
-            document.execCommand('copy');
-
-            // Визуальная обратная связь
-            const btn = event.target;
-            const originalText = btn.textContent;
-            btn.textContent = 'Copied!';
-            setTimeout(() => {
-                btn.textContent = originalText;
-            }, 1000);
+            tableData = [];
+            renderTable();
         }
 
         function parseExcelData(text) {
             if (!text.trim()) return [];
-
             const lines = text.split('\n').filter(line => line.trim());
             return lines.map(line => line.split('\t'));
         }
@@ -210,33 +501,289 @@
             return str + ' '.repeat(Math.max(0, length - str.length));
         }
 
+        function getColumnName(index) {
+            let name = '';
+            while (index >= 0) {
+                name = String.fromCharCode(65 + (index % 26)) + name;
+                index = Math.floor(index / 26) - 1;
+            }
+            return name;
+        }
+
         function convertToMarkdown() {
             const input = document.getElementById('input').value;
-            const noHeader = document.getElementById('noHeader').checked;
             const noSeparator = document.getElementById('noSeparator').checked;
             const alignWidth = document.getElementById('alignWidth').checked;
             const multiline = document.getElementById('multiline').checked;
 
             if (!input.trim()) {
-                document.getElementById('output').value = '';
+                tableData = [];
+                renderTable();
                 return;
             }
 
             const rows = parseExcelData(input);
             if (rows.length === 0) {
-                document.getElementById('output').value = '';
+                tableData = [];
+                renderTable();
                 return;
             }
+
+            tableData = rows;
+
+            // Проверяем, можно ли использовать Repeat
+            checkRepeatAvailability();
+
+            renderTable();
+        }
+
+        function checkRepeatAvailability() {
+            const repeatBtn = document.getElementById('repeatBtn');
+            if (deletedColumns.length > 0 && tableData.length > 0) {
+                const maxCol = Math.max(...tableData.map(row => row.length));
+                const validDeletions = deletedColumns.every(col => col < maxCol);
+                repeatBtn.disabled = !validDeletions;
+            } else {
+                repeatBtn.disabled = true;
+            }
+        }
+
+        function renderTable() {
+            const tableHeader = document.getElementById('tableHeader');
+            const tableBody = document.getElementById('tableBody');
+
+            tableHeader.innerHTML = '';
+            tableBody.innerHTML = '';
+
+            if (tableData.length === 0) {
+                return;
+            }
+
+            const maxCols = Math.max(...tableData.map(row => row.length));
+
+            // Создаем заголовок с буквами колонок
+            const headerRow = document.createElement('tr');
+            const cornerCell = document.createElement('th');
+            cornerCell.style.background = '#808080';
+            headerRow.appendChild(cornerCell);
+
+            for (let i = 0; i < maxCols; i++) {
+                const th = document.createElement('th');
+                th.textContent = getColumnName(i);
+                th.dataset.column = i;
+                th.onclick = (e) => selectColumn(i, e);
+                th.oncontextmenu = (e) => {
+                    e.preventDefault();
+                    if (!selectedColumns.has(i)) {
+                        selectedColumns.clear();
+                        selectedColumns.add(i);
+                        updateSelection();
+                    }
+                    showContextMenu(e);
+                };
+                headerRow.appendChild(th);
+            }
+            tableHeader.appendChild(headerRow);
+
+            // Создаем строки данных
+            tableData.forEach((row, rowIndex) => {
+                const tr = document.createElement('tr');
+
+                // Номер строки
+                const rowHeader = document.createElement('td');
+                rowHeader.className = 'row-header';
+                rowHeader.textContent = rowIndex + 1;
+                rowHeader.dataset.row = rowIndex;
+                rowHeader.onclick = (e) => selectRow(rowIndex, e);
+                rowHeader.oncontextmenu = (e) => {
+                    e.preventDefault();
+                    if (!selectedRows.has(rowIndex)) {
+                        selectedRows.clear();
+                        selectedRows.add(rowIndex);
+                        updateSelection();
+                    }
+                    showContextMenu(e);
+                };
+                tr.appendChild(rowHeader);
+
+                // Ячейки данных
+                for (let i = 0; i < maxCols; i++) {
+                    const td = document.createElement('td');
+                    td.textContent = row[i] || '';
+                    td.dataset.row = rowIndex;
+                    td.dataset.column = i;
+                    tr.appendChild(td);
+                }
+
+                tableBody.appendChild(tr);
+            });
+
+            updateSelection();
+        }
+
+        function selectColumn(colIndex, event) {
+            if (event.shiftKey && lastSelectedColumn !== -1) {
+                // Выделение диапазона
+                const start = Math.min(lastSelectedColumn, colIndex);
+                const end = Math.max(lastSelectedColumn, colIndex);
+                for (let i = start; i <= end; i++) {
+                    selectedColumns.add(i);
+                }
+            } else if (event.ctrlKey || event.metaKey) {
+                // Добавление к выделению
+                if (selectedColumns.has(colIndex)) {
+                    selectedColumns.delete(colIndex);
+                } else {
+                    selectedColumns.add(colIndex);
+                }
+            } else {
+                // Одиночное выделение
+                selectedColumns.clear();
+                selectedRows.clear();
+                selectedColumns.add(colIndex);
+            }
+
+            lastSelectedColumn = colIndex;
+            lastSelectedRow = -1;
+            updateSelection();
+        }
+
+        function selectRow(rowIndex, event) {
+            if (event.shiftKey && lastSelectedRow !== -1) {
+                // Выделение диапазона
+                const start = Math.min(lastSelectedRow, rowIndex);
+                const end = Math.max(lastSelectedRow, rowIndex);
+                for (let i = start; i <= end; i++) {
+                    selectedRows.add(i);
+                }
+            } else if (event.ctrlKey || event.metaKey) {
+                // Добавление к выделению
+                if (selectedRows.has(rowIndex)) {
+                    selectedRows.delete(rowIndex);
+                } else {
+                    selectedRows.add(rowIndex);
+                }
+            } else {
+                // Одиночное выделение
+                selectedRows.clear();
+                selectedColumns.clear();
+                selectedRows.add(rowIndex);
+            }
+
+            lastSelectedRow = rowIndex;
+            lastSelectedColumn = -1;
+            updateSelection();
+        }
+
+        function updateSelection() {
+            // Убираем все выделения
+            document.querySelectorAll('.excel-table th, .excel-table td').forEach(cell => {
+                cell.classList.remove('selected');
+            });
+
+            // Выделяем заголовки колонок
+            selectedColumns.forEach(colIndex => {
+                const header = document.querySelector(`th[data-column="${colIndex}"]`);
+                if (header) header.classList.add('selected');
+
+                // Выделяем все ячейки в колонке
+                document.querySelectorAll(`td[data-column="${colIndex}"]`).forEach(cell => {
+                    cell.classList.add('selected');
+                });
+            });
+
+            // Выделяем заголовки строк
+            selectedRows.forEach(rowIndex => {
+                const header = document.querySelector(`.row-header[data-row="${rowIndex}"]`);
+                if (header) header.classList.add('selected');
+
+                // Выделяем все ячейки в строке
+                document.querySelectorAll(`td[data-row="${rowIndex}"]`).forEach(cell => {
+                    cell.classList.add('selected');
+                });
+            });
+        }
+
+        function showContextMenu(event) {
+            const menu = document.getElementById('contextMenu');
+            menu.style.display = 'block';
+            menu.style.left = event.pageX + 'px';
+            menu.style.top = event.pageY + 'px';
+        }
+
+        function hideContextMenu() {
+            document.getElementById('contextMenu').style.display = 'none';
+        }
+
+        function deleteSelected() {
+            hideContextMenu();
+
+            if (selectedColumns.size > 0) {
+                // Удаляем колонки
+                const colsToDelete = Array.from(selectedColumns).sort((a, b) => b - a);
+                deletedColumns = Array.from(selectedColumns).sort((a, b) => a - b);
+
+                tableData = tableData.map(row => {
+                    return row.filter((_, index) => !selectedColumns.has(index));
+                });
+
+                selectedColumns.clear();
+            } else if (selectedRows.size > 0) {
+                // Удаляем строки
+                const rowsToDelete = Array.from(selectedRows).sort((a, b) => b - a);
+
+                tableData = tableData.filter((_, index) => !selectedRows.has(index));
+
+                selectedRows.clear();
+                deletedColumns = []; // Сбрасываем память об удаленных колонках
+            }
+
+            renderTable();
+            checkRepeatAvailability();
+        }
+
+        function repeatDeletion() {
+            if (deletedColumns.length === 0) return;
+
+            tableData = tableData.map(row => {
+                return row.filter((_, index) => !deletedColumns.includes(index));
+            });
+
+            selectedColumns.clear();
+            selectedRows.clear();
+            renderTable();
+        }
+
+        function copyToClipboard() {
+            const markdown = generateMarkdown();
+
+            // Копирование в буфер обмена
+            navigator.clipboard.writeText(markdown).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 1000);
+            });
+        }
+
+        function generateMarkdown() {
+            if (tableData.length === 0) return '';
+
+            const noSeparator = document.getElementById('noSeparator').checked;
+            const alignWidth = document.getElementById('alignWidth').checked;
+            const multiline = document.getElementById('multiline').checked;
 
             let result = [];
             let columnWidths = [];
 
-            // Вычисляем максимальную ширину колонок если нужно выравнивание
+            // Вычисляем максимальную ширину колонок
             if (alignWidth) {
-                const numColumns = Math.max(...rows.map(row => row.length));
+                const numColumns = Math.max(...tableData.map(row => row.length));
                 columnWidths = new Array(numColumns).fill(0);
 
-                rows.forEach(row => {
+                tableData.forEach(row => {
                     row.forEach((cell, i) => {
                         columnWidths[i] = Math.max(columnWidths[i] || 0, cell.length);
                     });
@@ -267,36 +814,32 @@
 
             if (multiline) {
                 // Многострочный режим
-                rows.forEach((row, index) => {
+                tableData.forEach((row, index) => {
                     result.push(formatRow(row));
-
-                    // Добавляем разделитель после каждой строки, кроме последней
-                    if (index < rows.length - 1) {
+                    if (index < tableData.length - 1) {
                         result.push(createSeparator(row.length));
                     }
                 });
-            } else if (noHeader) {
-                // Без заголовка
-                rows.forEach(row => {
-                    result.push(formatRow(row));
-                });
             } else {
                 // Стандартный режим с заголовком
-                if (rows.length > 0) {
-                    result.push(formatRow(rows[0]));
+                if (tableData.length > 0) {
+                    result.push(formatRow(tableData[0]));
 
-                    if (!noSeparator || rows.length <= 2) {
-                        result.push(createSeparator(rows[0].length));
+                    if (!noSeparator || tableData.length <= 2) {
+                        result.push(createSeparator(tableData[0].length));
                     }
 
-                    for (let i = 1; i < rows.length; i++) {
-                        result.push(formatRow(rows[i]));
+                    for (let i = 1; i < tableData.length; i++) {
+                        result.push(formatRow(tableData[i]));
                     }
                 }
             }
 
-            document.getElementById('output').value = result.join('\n');
+            return result.join('\n');
         }
+
+        // Скрытие контекстного меню при клике вне его
+        document.addEventListener('click', hideContextMenu);
 
         // Автоматическая конвертация при вставке
         document.getElementById('input').addEventListener('input', convertToMarkdown);
