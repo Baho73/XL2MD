@@ -31,8 +31,7 @@
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
+            width: 100%;
         }
 
         .header {
@@ -60,7 +59,7 @@
             cursor: pointer;
         }
 
-        /* Верхняя секция с input и кнопками */
+        /* Верхняя секция с input и правой панелью */
         .input-section {
             display: flex;
             gap: 8px;
@@ -83,21 +82,21 @@
             border-color: #1a1a1a #4a4a4a #4a4a4a #1a1a1a;
         }
 
-        .buttons-panel {
+        .controls-panel {
+            width: 250px;
+            border: 2px solid;
+            padding: 8px;
             display: flex;
             flex-direction: column;
             gap: 6px;
-            border: 2px solid;
-            padding: 8px;
-            min-width: 100px;
         }
 
-        body.light .buttons-panel {
+        body.light .controls-panel {
             background-color: #c0c0c0;
             border-color: #dfdfdf #808080 #808080 #dfdfdf;
         }
 
-        body.dark .buttons-panel {
+        body.dark .controls-panel {
             background-color: #3c3c3c;
             border-color: #1a1a1a #4a4a4a #4a4a4a #1a1a1a;
         }
@@ -131,30 +130,14 @@
         }
 
         textarea.no-wrap {
-            white-space: nowrap;
+            white-space: pre;
             overflow-x: auto;
         }
 
         /* Чекбоксы */
-        .controls {
-            margin-bottom: 10px;
-            border: 2px solid;
-            padding: 8px;
-        }
-
-        body.light .controls {
-            background-color: #c0c0c0;
-            border-color: #dfdfdf #808080 #808080 #dfdfdf;
-        }
-
-        body.dark .controls {
-            background-color: #3c3c3c;
-            border-color: #1a1a1a #4a4a4a #4a4a4a #1a1a1a;
-        }
-
         .checkbox-group {
-            display: inline-block;
-            margin-right: 20px;
+            display: flex;
+            align-items: center;
             margin-bottom: 4px;
         }
 
@@ -165,6 +148,7 @@
         label {
             cursor: pointer;
             user-select: none;
+            font-size: 11px;
         }
 
         /* Кнопки */
@@ -174,7 +158,6 @@
             padding: 4px 16px;
             border: 2px solid;
             cursor: pointer;
-            min-width: 80px;
             width: 100%;
         }
 
@@ -204,7 +187,20 @@
             cursor: default;
         }
 
-        /* Excel-подобная таблица */
+        .button-separator {
+            height: 1px;
+            margin: 4px 0;
+        }
+
+        body.light .button-separator {
+            background: #808080;
+        }
+
+        body.dark .button-separator {
+            background: #4a4a4a;
+        }
+
+        /* Нижняя секция с таблицей */
         .output-section {
             border: 2px solid;
             padding: 8px;
@@ -220,87 +216,120 @@
             border-color: #1a1a1a #4a4a4a #4a4a4a #1a1a1a;
         }
 
-        .excel-table-wrapper {
+        .table-with-headers {
+            display: flex;
             margin-top: 8px;
-            border: 2px solid;
-            overflow: auto;
-            max-height: 400px;
         }
 
-        body.light .excel-table-wrapper {
-            background-color: #fff;
-            border-color: #808080 #dfdfdf #dfdfdf #808080;
+        .row-headers {
+            display: flex;
+            flex-direction: column;
+            margin-right: 4px;
         }
 
-        body.dark .excel-table-wrapper {
-            background-color: #1a1a1a;
-            border-color: #000 #4a4a4a #4a4a4a #000;
-        }
-
-        .excel-table {
-            border-collapse: collapse;
-            font-family: 'Courier New', monospace;
-            font-size: 11px;
-        }
-
-        .excel-table th,
-        .excel-table td {
+        .row-header-corner {
+            width: 40px;
+            height: 24px;
             border: 1px solid;
-            padding: 4px 8px;
-            text-align: left;
-            cursor: default;
-            white-space: nowrap;
-        }
-
-        body.light .excel-table th,
-        body.light .excel-table td {
-            border-color: #c0c0c0;
-        }
-
-        body.dark .excel-table th,
-        body.dark .excel-table td {
-            border-color: #4a4a4a;
-        }
-
-        .excel-table th {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: bold;
-            text-align: center;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        body.light .row-header-corner {
+            background-color: #dfdfdf;
+            border-color: #808080;
+        }
+
+        body.dark .row-header-corner {
+            background-color: #4a4a4a;
+            border-color: #000;
+        }
+
+        .row-header {
+            width: 40px;
+            min-height: 20px;
+            border: 1px solid;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
             user-select: none;
-        }
-
-        body.light .excel-table th {
-            background-color: #dfdfdf;
-        }
-
-        body.dark .excel-table th {
-            background-color: #4a4a4a;
-        }
-
-        .excel-table .row-header {
             font-weight: bold;
-            text-align: center;
-            cursor: pointer;
-            user-select: none;
-            min-width: 40px;
+            font-size: 10px;
+            flex-shrink: 0;
         }
 
-        body.light .excel-table .row-header {
+        body.light .row-header {
             background-color: #dfdfdf;
+            border-color: #808080;
         }
 
-        body.dark .excel-table .row-header {
+        body.dark .row-header {
             background-color: #4a4a4a;
+            border-color: #000;
         }
 
-        .excel-table th:hover,
-        .excel-table .row-header:hover {
+        .row-header:hover {
             opacity: 0.8;
         }
 
-        .excel-table .selected {
+        .row-header.selected {
             background-color: #0000ff !important;
             color: #fff !important;
+        }
+
+        .table-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .column-headers {
+            display: flex;
+            margin-bottom: 4px;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        .column-header {
+            min-width: 60px;
+            height: 24px;
+            border: 1px solid;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            font-weight: bold;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        body.light .column-header {
+            background-color: #dfdfdf;
+            border-color: #808080;
+        }
+
+        body.dark .column-header {
+            background-color: #4a4a4a;
+            border-color: #000;
+        }
+
+        .column-header:hover {
+            opacity: 0.8;
+        }
+
+        .column-header.selected {
+            background-color: #0000ff !important;
+            color: #fff !important;
+        }
+
+        #output {
+            flex: 1;
         }
 
         /* Контекстное меню */
@@ -361,47 +390,50 @@
             </div>
         </div>
 
-        <!-- Верхняя секция: input + кнопки -->
+        <!-- Верхняя секция: input + кнопки + чекбоксы -->
         <div class="input-section">
             <div class="input-panel">
                 <label class="label" for="input">Вставьте таблицу из Excel:</label>
                 <textarea id="input" placeholder="Ctrl+V для вставки..."></textarea>
             </div>
-            <div class="buttons-panel">
+            <div class="controls-panel">
                 <button onclick="clearInput()">Clear</button>
                 <button onclick="convertToMarkdown()">Convert</button>
                 <button id="repeatBtn" onclick="repeatDeletion()" disabled>Repeat</button>
-            </div>
-        </div>
 
-        <!-- Чекбоксы настроек -->
-        <div class="controls">
-            <div class="checkbox-group">
-                <input type="checkbox" id="noSeparator" onchange="handleSeparatorChange()">
-                <label for="noSeparator">Не включать горизонтальный разделитель</label>
-            </div>
-            <div class="checkbox-group">
-                <input type="checkbox" id="alignWidth" onchange="convertToMarkdown()">
-                <label for="alignWidth">Выровнять по ширине</label>
-            </div>
-            <div class="checkbox-group">
-                <input type="checkbox" id="multiline" onchange="handleMultilineChange()">
-                <label for="multiline">Многострочный режим</label>
-            </div>
-            <div class="checkbox-group">
-                <input type="checkbox" id="wrapLines" onchange="toggleWrap()">
-                <label for="wrapLines">Переносить по строкам</label>
+                <div class="button-separator"></div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="noSeparator" onchange="handleSeparatorChange()">
+                    <label for="noSeparator">Без разделителя</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="alignWidth" onchange="convertToMarkdown()">
+                    <label for="alignWidth">Выровнять по ширине</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="multiline" onchange="handleMultilineChange()">
+                    <label for="multiline">Многострочный режим</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="wrapLines" onchange="toggleWrap()">
+                    <label for="wrapLines">Переносить по строкам</label>
+                </div>
             </div>
         </div>
 
         <!-- Нижняя секция: таблица с заголовками -->
         <div class="output-section">
             <label class="label">Результат (Markdown):</label>
-            <div class="excel-table-wrapper" id="tableWrapper">
-                <table class="excel-table" id="markdownTable">
-                    <thead id="tableHeader"></thead>
-                    <tbody id="tableBody"></tbody>
-                </table>
+            <div class="table-with-headers">
+                <div class="row-headers">
+                    <div class="row-header-corner"></div>
+                    <div id="rowHeadersContainer"></div>
+                </div>
+                <div class="table-main">
+                    <div class="column-headers" id="columnHeaders"></div>
+                    <textarea id="output" class="no-wrap" readonly></textarea>
+                </div>
             </div>
             <div class="bottom-buttons">
                 <button onclick="copyToClipboard()">Copy</button>
@@ -446,13 +478,15 @@
 
         // Переключение переноса строк
         function toggleWrap() {
-            const wrapper = document.getElementById('tableWrapper');
+            const output = document.getElementById('output');
             const checkbox = document.getElementById('wrapLines');
 
             if (checkbox.checked) {
-                wrapper.style.whiteSpace = 'normal';
+                output.classList.remove('no-wrap');
+                output.style.whiteSpace = 'pre-wrap';
             } else {
-                wrapper.style.whiteSpace = 'nowrap';
+                output.classList.add('no-wrap');
+                output.style.whiteSpace = 'pre';
             }
         }
 
@@ -488,7 +522,7 @@
         function clearInput() {
             document.getElementById('input').value = '';
             tableData = [];
-            renderTable();
+            updateMarkdown();
         }
 
         function parseExcelData(text) {
@@ -503,38 +537,33 @@
 
         function getColumnName(index) {
             let name = '';
-            while (index >= 0) {
-                name = String.fromCharCode(65 + (index % 26)) + name;
-                index = Math.floor(index / 26) - 1;
+            let num = index;
+            while (num >= 0) {
+                name = String.fromCharCode(65 + (num % 26)) + name;
+                num = Math.floor(num / 26) - 1;
             }
             return name;
         }
 
         function convertToMarkdown() {
             const input = document.getElementById('input').value;
-            const noSeparator = document.getElementById('noSeparator').checked;
-            const alignWidth = document.getElementById('alignWidth').checked;
-            const multiline = document.getElementById('multiline').checked;
 
             if (!input.trim()) {
                 tableData = [];
-                renderTable();
+                updateMarkdown();
                 return;
             }
 
             const rows = parseExcelData(input);
             if (rows.length === 0) {
                 tableData = [];
-                renderTable();
+                updateMarkdown();
                 return;
             }
 
             tableData = rows;
-
-            // Проверяем, можно ли использовать Repeat
             checkRepeatAvailability();
-
-            renderTable();
+            updateMarkdown();
         }
 
         function checkRepeatAvailability() {
@@ -548,96 +577,79 @@
             }
         }
 
-        function renderTable() {
-            const tableHeader = document.getElementById('tableHeader');
-            const tableBody = document.getElementById('tableBody');
+        function updateMarkdown() {
+            const markdown = generateMarkdown();
+            document.getElementById('output').value = markdown;
+            updateHeaders();
+            updateSelection();
+        }
 
-            tableHeader.innerHTML = '';
-            tableBody.innerHTML = '';
+        function updateHeaders() {
+            const columnHeaders = document.getElementById('columnHeaders');
+            const rowHeadersContainer = document.getElementById('rowHeadersContainer');
 
-            if (tableData.length === 0) {
-                return;
-            }
+            columnHeaders.innerHTML = '';
+            rowHeadersContainer.innerHTML = '';
+
+            if (tableData.length === 0) return;
 
             const maxCols = Math.max(...tableData.map(row => row.length));
 
-            // Создаем заголовок с буквами колонок
-            const headerRow = document.createElement('tr');
-            const cornerCell = document.createElement('th');
-            cornerCell.style.background = '#808080';
-            headerRow.appendChild(cornerCell);
-
+            // Создаем заголовки колонок
             for (let i = 0; i < maxCols; i++) {
-                const th = document.createElement('th');
-                th.textContent = getColumnName(i);
-                th.dataset.column = i;
-                th.onclick = (e) => selectColumn(i, e);
-                th.oncontextmenu = (e) => {
+                const header = document.createElement('div');
+                header.className = 'column-header';
+                header.textContent = getColumnName(i);
+                header.dataset.column = i;
+                header.onclick = (e) => selectColumn(i, e);
+                header.oncontextmenu = (e) => {
                     e.preventDefault();
                     if (!selectedColumns.has(i)) {
                         selectedColumns.clear();
+                        selectedRows.clear();
                         selectedColumns.add(i);
                         updateSelection();
                     }
                     showContextMenu(e);
                 };
-                headerRow.appendChild(th);
+                columnHeaders.appendChild(header);
             }
-            tableHeader.appendChild(headerRow);
 
-            // Создаем строки данных
-            tableData.forEach((row, rowIndex) => {
-                const tr = document.createElement('tr');
-
-                // Номер строки
-                const rowHeader = document.createElement('td');
-                rowHeader.className = 'row-header';
-                rowHeader.textContent = rowIndex + 1;
-                rowHeader.dataset.row = rowIndex;
-                rowHeader.onclick = (e) => selectRow(rowIndex, e);
-                rowHeader.oncontextmenu = (e) => {
+            // Создаем заголовки строк
+            for (let i = 0; i < tableData.length; i++) {
+                const header = document.createElement('div');
+                header.className = 'row-header';
+                header.textContent = i + 1;
+                header.dataset.row = i;
+                header.onclick = (e) => selectRow(i, e);
+                header.oncontextmenu = (e) => {
                     e.preventDefault();
-                    if (!selectedRows.has(rowIndex)) {
+                    if (!selectedRows.has(i)) {
                         selectedRows.clear();
-                        selectedRows.add(rowIndex);
+                        selectedColumns.clear();
+                        selectedRows.add(i);
                         updateSelection();
                     }
                     showContextMenu(e);
                 };
-                tr.appendChild(rowHeader);
-
-                // Ячейки данных
-                for (let i = 0; i < maxCols; i++) {
-                    const td = document.createElement('td');
-                    td.textContent = row[i] || '';
-                    td.dataset.row = rowIndex;
-                    td.dataset.column = i;
-                    tr.appendChild(td);
-                }
-
-                tableBody.appendChild(tr);
-            });
-
-            updateSelection();
+                rowHeadersContainer.appendChild(header);
+            }
         }
 
         function selectColumn(colIndex, event) {
             if (event.shiftKey && lastSelectedColumn !== -1) {
-                // Выделение диапазона
                 const start = Math.min(lastSelectedColumn, colIndex);
                 const end = Math.max(lastSelectedColumn, colIndex);
                 for (let i = start; i <= end; i++) {
                     selectedColumns.add(i);
                 }
             } else if (event.ctrlKey || event.metaKey) {
-                // Добавление к выделению
                 if (selectedColumns.has(colIndex)) {
                     selectedColumns.delete(colIndex);
                 } else {
                     selectedColumns.add(colIndex);
                 }
             } else {
-                // Одиночное выделение
                 selectedColumns.clear();
                 selectedRows.clear();
                 selectedColumns.add(colIndex);
@@ -650,21 +662,18 @@
 
         function selectRow(rowIndex, event) {
             if (event.shiftKey && lastSelectedRow !== -1) {
-                // Выделение диапазона
                 const start = Math.min(lastSelectedRow, rowIndex);
                 const end = Math.max(lastSelectedRow, rowIndex);
                 for (let i = start; i <= end; i++) {
                     selectedRows.add(i);
                 }
             } else if (event.ctrlKey || event.metaKey) {
-                // Добавление к выделению
                 if (selectedRows.has(rowIndex)) {
                     selectedRows.delete(rowIndex);
                 } else {
                     selectedRows.add(rowIndex);
                 }
             } else {
-                // Одиночное выделение
                 selectedRows.clear();
                 selectedColumns.clear();
                 selectedRows.add(rowIndex);
@@ -677,30 +686,20 @@
 
         function updateSelection() {
             // Убираем все выделения
-            document.querySelectorAll('.excel-table th, .excel-table td').forEach(cell => {
-                cell.classList.remove('selected');
+            document.querySelectorAll('.column-header, .row-header').forEach(el => {
+                el.classList.remove('selected');
             });
 
             // Выделяем заголовки колонок
             selectedColumns.forEach(colIndex => {
-                const header = document.querySelector(`th[data-column="${colIndex}"]`);
+                const header = document.querySelector(`.column-header[data-column="${colIndex}"]`);
                 if (header) header.classList.add('selected');
-
-                // Выделяем все ячейки в колонке
-                document.querySelectorAll(`td[data-column="${colIndex}"]`).forEach(cell => {
-                    cell.classList.add('selected');
-                });
             });
 
             // Выделяем заголовки строк
             selectedRows.forEach(rowIndex => {
                 const header = document.querySelector(`.row-header[data-row="${rowIndex}"]`);
                 if (header) header.classList.add('selected');
-
-                // Выделяем все ячейки в строке
-                document.querySelectorAll(`td[data-row="${rowIndex}"]`).forEach(cell => {
-                    cell.classList.add('selected');
-                });
             });
         }
 
@@ -719,26 +718,18 @@
             hideContextMenu();
 
             if (selectedColumns.size > 0) {
-                // Удаляем колонки
-                const colsToDelete = Array.from(selectedColumns).sort((a, b) => b - a);
                 deletedColumns = Array.from(selectedColumns).sort((a, b) => a - b);
-
                 tableData = tableData.map(row => {
                     return row.filter((_, index) => !selectedColumns.has(index));
                 });
-
                 selectedColumns.clear();
             } else if (selectedRows.size > 0) {
-                // Удаляем строки
-                const rowsToDelete = Array.from(selectedRows).sort((a, b) => b - a);
-
                 tableData = tableData.filter((_, index) => !selectedRows.has(index));
-
                 selectedRows.clear();
-                deletedColumns = []; // Сбрасываем память об удаленных колонках
+                deletedColumns = [];
             }
 
-            renderTable();
+            updateMarkdown();
             checkRepeatAvailability();
         }
 
@@ -751,14 +742,13 @@
 
             selectedColumns.clear();
             selectedRows.clear();
-            renderTable();
+            updateMarkdown();
         }
 
         function copyToClipboard() {
-            const markdown = generateMarkdown();
-
-            // Копирование в буфер обмена
-            navigator.clipboard.writeText(markdown).then(() => {
+            const output = document.getElementById('output');
+            output.select();
+            navigator.clipboard.writeText(output.value).then(() => {
                 const btn = event.target;
                 const originalText = btn.textContent;
                 btn.textContent = 'Copied!';
@@ -778,7 +768,6 @@
             let result = [];
             let columnWidths = [];
 
-            // Вычисляем максимальную ширину колонок
             if (alignWidth) {
                 const numColumns = Math.max(...tableData.map(row => row.length));
                 columnWidths = new Array(numColumns).fill(0);
@@ -790,7 +779,6 @@
                 });
             }
 
-            // Форматирование строки
             function formatRow(row) {
                 if (alignWidth) {
                     return '| ' + row.map((cell, i) =>
@@ -801,7 +789,6 @@
                 }
             }
 
-            // Создание разделителя
             function createSeparator(numColumns) {
                 if (alignWidth) {
                     return '| ' + columnWidths.slice(0, numColumns).map(width =>
@@ -813,7 +800,6 @@
             }
 
             if (multiline) {
-                // Многострочный режим
                 tableData.forEach((row, index) => {
                     result.push(formatRow(row));
                     if (index < tableData.length - 1) {
@@ -821,11 +807,10 @@
                     }
                 });
             } else {
-                // Стандартный режим с заголовком
                 if (tableData.length > 0) {
                     result.push(formatRow(tableData[0]));
 
-                    if (!noSeparator || tableData.length <= 2) {
+                    if (!noSeparator) {
                         result.push(createSeparator(tableData[0].length));
                     }
 
@@ -838,10 +823,10 @@
             return result.join('\n');
         }
 
-        // Скрытие контекстного меню при клике вне его
+        // Скрытие контекстного меню
         document.addEventListener('click', hideContextMenu);
 
-        // Автоматическая конвертация при вставке
+        // Автоматическая конвертация
         document.getElementById('input').addEventListener('input', convertToMarkdown);
         document.getElementById('input').addEventListener('paste', () => {
             setTimeout(convertToMarkdown, 10);
