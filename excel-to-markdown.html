@@ -59,6 +59,26 @@
             cursor: pointer;
         }
 
+        select.compact {
+            font-family: inherit;
+            font-size: 11px;
+            padding: 2px 4px;
+            border: 2px solid;
+            cursor: pointer;
+        }
+
+        body.light select.compact {
+            background-color: #fff;
+            border-color: #808080 #dfdfdf #dfdfdf #808080;
+            color: #000;
+        }
+
+        body.dark select.compact {
+            background-color: #1a1a1a;
+            border-color: #000 #4a4a4a #4a4a4a #000;
+            color: #00ff00;
+        }
+
         /* Верхняя секция с input и правой панелью */
         .input-section {
             display: flex;
@@ -110,7 +130,6 @@
         textarea {
             width: 100%;
             font-family: inherit;
-            font-size: 11px;
             border: 2px solid;
             padding: 4px;
             resize: vertical;
@@ -135,6 +154,10 @@
 
         #input {
             height: 200px;
+        }
+
+        #output {
+            height: 160px; /* 10 строк по дефолту */
         }
 
         /* Чекбоксы и селекты */
@@ -343,9 +366,9 @@
             cursor: pointer;
             user-select: none;
             font-weight: bold;
-            font-size: 10px;
             flex-shrink: 0;
-            padding: 0 4px;
+            padding: 0 2px;
+            font-family: inherit;
         }
 
         body.light .column-header {
@@ -365,10 +388,6 @@
         .column-header.selected {
             background-color: #0000ff !important;
             color: #fff !important;
-        }
-
-        #output {
-            flex: 1;
         }
 
         /* Контекстное меню */
@@ -426,6 +445,16 @@
             <div class="theme-switcher">
                 <span>Theme:</span>
                 <button class="theme-toggle" onclick="toggleTheme()">Light/Dark</button>
+                <span>Size:</span>
+                <select class="compact" id="fontSizeSelect" onchange="changeFontSize()">
+                    <option value="9">9px</option>
+                    <option value="10">10px</option>
+                    <option value="11" selected>11px</option>
+                    <option value="12">12px</option>
+                    <option value="13">13px</option>
+                    <option value="14">14px</option>
+                    <option value="16">16px</option>
+                </select>
             </div>
         </div>
 
@@ -517,7 +546,7 @@
             }
         }
 
-        // Загрузка сохраненной темы
+        // Загрузка сохраненных настроек
         window.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.body.classList.remove('light', 'dark');
@@ -525,7 +554,12 @@
 
             const savedFont = localStorage.getItem('font') || 'Iosevka Fixed';
             document.getElementById('fontSelect').value = savedFont;
+
+            const savedFontSize = localStorage.getItem('fontSize') || '11';
+            document.getElementById('fontSizeSelect').value = savedFontSize;
+
             changeFont();
+            changeFontSize();
         });
 
         // Смена шрифта
@@ -533,8 +567,24 @@
             const font = document.getElementById('fontSelect').value;
             document.body.style.fontFamily = `'${font}', monospace`;
             localStorage.setItem('font', font);
+            updateHeaders();
+        }
 
-            // Перерисовываем заголовки с новой шириной
+        // Смена размера шрифта
+        function changeFontSize() {
+            const size = document.getElementById('fontSizeSelect').value;
+            const textareas = document.querySelectorAll('textarea');
+            const headers = document.querySelectorAll('.column-header');
+
+            textareas.forEach(ta => {
+                ta.style.fontSize = size + 'px';
+            });
+
+            headers.forEach(h => {
+                h.style.fontSize = size + 'px';
+            });
+
+            localStorage.setItem('fontSize', size);
             updateHeaders();
         }
 
@@ -598,18 +648,12 @@
             tableData = [];
             const noSeparator = document.getElementById('noSeparator').checked;
 
-            if (rows.length > 0) {
-                // Первая строка (заголовок)
-                tableData.push({ type: 'row', data: rows[0] });
+            for (let i = 0; i < rows.length; i++) {
+                tableData.push({ type: 'row', data: rows[i] });
 
-                if (!noSeparator) {
-                    // Добавляем разделитель после заголовка
-                    tableData.push({ type: 'separator', columns: rows[0].length });
-                }
-
-                // Остальные строки
-                for (let i = 1; i < rows.length; i++) {
-                    tableData.push({ type: 'row', data: rows[i] });
+                // Добавляем разделитель после каждой строки, кроме последней
+                if (!noSeparator && i < rows.length - 1) {
+                    tableData.push({ type: 'separator', columns: rows[i].length });
                 }
             }
 
@@ -638,7 +682,8 @@
             // Автоматическая высота (10-30 строк)
             const lines = markdown.split('\n').length;
             const targetLines = Math.max(10, Math.min(30, lines));
-            output.style.height = (targetLines * 16) + 'px'; // ~16px на строку
+            const fontSize = parseInt(document.getElementById('fontSizeSelect').value);
+            output.style.height = (targetLines * (fontSize + 5)) + 'px'; // fontSize + межстрочный интервал
 
             updateHeaders();
             updateSelection();
@@ -660,14 +705,6 @@
             return widths;
         }
 
-        function getTextWidth(text) {
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            const font = document.getElementById('fontSelect').value;
-            context.font = `11px '${font}', monospace`;
-            return context.measureText(text).width;
-        }
-
         function updateHeaders() {
             const columnHeaders = document.getElementById('columnHeaders');
             const rowHeadersContainer = document.getElementById('rowHeadersContainer');
@@ -681,6 +718,7 @@
             const maxCols = Math.max(...dataRows.map(row => row.data.length));
             const columnWidths = calculateColumnWidths();
             const alignWidth = document.getElementById('alignWidth').checked;
+            const fontSize = parseInt(document.getElementById('fontSizeSelect').value);
 
             // Создаем заголовки колонок
             for (let i = 0; i < maxCols; i++) {
@@ -688,11 +726,13 @@
                 header.className = 'column-header';
                 header.textContent = getColumnName(i);
                 header.dataset.column = i;
+                header.style.fontSize = fontSize + 'px';
 
                 // Вычисляем ширину по содержимому колонки
                 if (alignWidth && columnWidths[i]) {
-                    const sampleText = 'X'.repeat(columnWidths[i]);
-                    const width = getTextWidth(sampleText) + 12; // +12 для padding
+                    // Используем количество символов для вычисления ширины
+                    const charWidth = fontSize * 0.6; // Примерная ширина моноширинного символа
+                    const width = (columnWidths[i] * charWidth) + 16; // +16 для padding и границ
                     header.style.width = width + 'px';
                 } else {
                     header.style.width = 'auto';
@@ -722,7 +762,9 @@
                     header.classList.add('separator');
                     header.textContent = '---';
                 } else {
-                    header.textContent = i + 1;
+                    // Считаем только строки с данными
+                    const dataRowIndex = tableData.slice(0, i + 1).filter(r => r.type === 'row').length;
+                    header.textContent = dataRowIndex;
                 }
 
                 header.dataset.row = i;
@@ -828,7 +870,7 @@
                             data: row.data.filter((_, index) => !selectedColumns.has(index))
                         };
                     } else {
-                        return row; // Разделитель остается
+                        return row;
                     }
                 });
                 selectedColumns.clear();
