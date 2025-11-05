@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel to Markdown Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #c0c0c0;
+            padding: 10px;
+            font-size: 12px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #c0c0c0;
+        }
+
+        h1 {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #000;
+        }
+
+        .panel {
+            background-color: #c0c0c0;
+            border: 2px solid;
+            border-color: #dfdfdf #808080 #808080 #dfdfdf;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            background-color: #fff;
+            border: 2px solid;
+            border-color: #808080 #dfdfdf #dfdfdf #808080;
+            padding: 4px;
+            resize: vertical;
+        }
+
+        .controls {
+            margin: 10px 0;
+        }
+
+        .checkbox-group {
+            margin: 8px 0;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 6px;
+        }
+
+        label {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        button {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            padding: 4px 16px;
+            background-color: #c0c0c0;
+            border: 2px solid;
+            border-color: #dfdfdf #000 #000 #dfdfdf;
+            cursor: pointer;
+            min-width: 80px;
+        }
+
+        button:active {
+            border-color: #000 #dfdfdf #dfdfdf #000;
+            padding: 5px 15px 3px 17px;
+        }
+
+        button:disabled {
+            color: #808080;
+            cursor: default;
+        }
+
+        .button-group {
+            margin-top: 6px;
+        }
+
+        .label {
+            font-weight: bold;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px solid;
+            border-color: #808080 #dfdfdf;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Excel to Markdown Converter</h1>
+
+        <div class="panel">
+            <label class="label" for="input">Вставьте таблицу из Excel:</label>
+            <textarea id="input" placeholder="Ctrl+V для вставки..."></textarea>
+            <div class="button-group">
+                <button onclick="clearInput()">Clear</button>
+                <button onclick="convertToMarkdown()">Convert</button>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="controls">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="noHeader" onchange="convertToMarkdown()">
+                    <label for="noHeader">Не включать заголовок</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="noSeparator" onchange="handleSeparatorChange()">
+                    <label for="noSeparator">Не включать горизонтальный разделитель</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="alignWidth" onchange="convertToMarkdown()">
+                    <label for="alignWidth">Выровнять по ширине</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="multiline" onchange="handleMultilineChange()">
+                    <label for="multiline">Многострочный режим</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <label class="label" for="output">Результат (Markdown):</label>
+            <textarea id="output" readonly></textarea>
+            <div class="button-group">
+                <button onclick="copyToClipboard()">Copy</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Обработка взаимоисключающих опций
+        function handleSeparatorChange() {
+            const noSeparator = document.getElementById('noSeparator');
+            const multiline = document.getElementById('multiline');
+
+            if (noSeparator.checked) {
+                multiline.checked = false;
+                multiline.disabled = true;
+            } else {
+                multiline.disabled = false;
+            }
+
+            convertToMarkdown();
+        }
+
+        function handleMultilineChange() {
+            const noSeparator = document.getElementById('noSeparator');
+            const multiline = document.getElementById('multiline');
+
+            if (multiline.checked) {
+                noSeparator.checked = false;
+                noSeparator.disabled = true;
+            } else {
+                noSeparator.disabled = false;
+            }
+
+            convertToMarkdown();
+        }
+
+        function clearInput() {
+            document.getElementById('input').value = '';
+            document.getElementById('output').value = '';
+        }
+
+        function copyToClipboard() {
+            const output = document.getElementById('output');
+            output.select();
+            document.execCommand('copy');
+
+            // Визуальная обратная связь
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = 'Copied!';
+            setTimeout(() => {
+                btn.textContent = originalText;
+            }, 1000);
+        }
+
+        function parseExcelData(text) {
+            if (!text.trim()) return [];
+
+            const lines = text.split('\n').filter(line => line.trim());
+            return lines.map(line => line.split('\t'));
+        }
+
+        function padString(str, length) {
+            return str + ' '.repeat(Math.max(0, length - str.length));
+        }
+
+        function convertToMarkdown() {
+            const input = document.getElementById('input').value;
+            const noHeader = document.getElementById('noHeader').checked;
+            const noSeparator = document.getElementById('noSeparator').checked;
+            const alignWidth = document.getElementById('alignWidth').checked;
+            const multiline = document.getElementById('multiline').checked;
+
+            if (!input.trim()) {
+                document.getElementById('output').value = '';
+                return;
+            }
+
+            const rows = parseExcelData(input);
+            if (rows.length === 0) {
+                document.getElementById('output').value = '';
+                return;
+            }
+
+            let result = [];
+            let columnWidths = [];
+
+            // Вычисляем максимальную ширину колонок если нужно выравнивание
+            if (alignWidth) {
+                const numColumns = Math.max(...rows.map(row => row.length));
+                columnWidths = new Array(numColumns).fill(0);
+
+                rows.forEach(row => {
+                    row.forEach((cell, i) => {
+                        columnWidths[i] = Math.max(columnWidths[i] || 0, cell.length);
+                    });
+                });
+            }
+
+            // Форматирование строки
+            function formatRow(row) {
+                if (alignWidth) {
+                    return '| ' + row.map((cell, i) =>
+                        padString(cell, columnWidths[i])
+                    ).join(' | ') + ' |';
+                } else {
+                    return '| ' + row.join(' | ') + ' |';
+                }
+            }
+
+            // Создание разделителя
+            function createSeparator(numColumns) {
+                if (alignWidth) {
+                    return '| ' + columnWidths.slice(0, numColumns).map(width =>
+                        '-'.repeat(width)
+                    ).join(' | ') + ' |';
+                } else {
+                    return '| ' + Array(numColumns).fill('---').join(' | ') + ' |';
+                }
+            }
+
+            if (multiline) {
+                // Многострочный режим
+                rows.forEach((row, index) => {
+                    result.push(formatRow(row));
+
+                    // Добавляем разделитель после каждой строки, кроме последней
+                    if (index < rows.length - 1) {
+                        result.push(createSeparator(row.length));
+                    }
+                });
+            } else if (noHeader) {
+                // Без заголовка
+                rows.forEach(row => {
+                    result.push(formatRow(row));
+                });
+            } else {
+                // Стандартный режим с заголовком
+                if (rows.length > 0) {
+                    result.push(formatRow(rows[0]));
+
+                    if (!noSeparator || rows.length <= 2) {
+                        result.push(createSeparator(rows[0].length));
+                    }
+
+                    for (let i = 1; i < rows.length; i++) {
+                        result.push(formatRow(rows[i]));
+                    }
+                }
+            }
+
+            document.getElementById('output').value = result.join('\n');
+        }
+
+        // Автоматическая конвертация при вставке
+        document.getElementById('input').addEventListener('input', convertToMarkdown);
+        document.getElementById('input').addEventListener('paste', () => {
+            setTimeout(convertToMarkdown, 10);
+        });
+    </script>
+</body>
+</html>
