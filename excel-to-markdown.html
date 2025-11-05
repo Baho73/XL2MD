@@ -12,7 +12,7 @@
         }
 
         body {
-            font-family: 'Courier New', monospace;
+            font-family: 'Iosevka Fixed', 'Courier New', monospace;
             padding: 10px;
             font-size: 12px;
             transition: background-color 0.3s, color 0.3s;
@@ -53,7 +53,7 @@
         }
 
         .theme-toggle {
-            font-family: 'Courier New', monospace;
+            font-family: inherit;
             font-size: 12px;
             padding: 4px 12px;
             cursor: pointer;
@@ -109,8 +109,7 @@
 
         textarea {
             width: 100%;
-            height: 200px;
-            font-family: 'Courier New', monospace;
+            font-family: inherit;
             font-size: 11px;
             border: 2px solid;
             padding: 4px;
@@ -134,11 +133,26 @@
             overflow-x: auto;
         }
 
-        /* Чекбоксы */
+        #input {
+            height: 200px;
+        }
+
+        /* Чекбоксы и селекты */
         .checkbox-group {
             display: flex;
             align-items: center;
             margin-bottom: 4px;
+        }
+
+        .select-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 4px;
+        }
+
+        .select-group label {
+            font-size: 10px;
+            margin-bottom: 2px;
         }
 
         input[type="checkbox"] {
@@ -151,9 +165,29 @@
             font-size: 11px;
         }
 
+        select {
+            font-family: inherit;
+            font-size: 11px;
+            padding: 2px;
+            border: 2px solid;
+            cursor: pointer;
+        }
+
+        body.light select {
+            background-color: #fff;
+            border-color: #808080 #dfdfdf #dfdfdf #808080;
+            color: #000;
+        }
+
+        body.dark select {
+            background-color: #1a1a1a;
+            border-color: #000 #4a4a4a #4a4a4a #000;
+            color: #00ff00;
+        }
+
         /* Кнопки */
         button {
-            font-family: 'Courier New', monospace;
+            font-family: inherit;
             font-size: 12px;
             padding: 4px 16px;
             border: 2px solid;
@@ -251,7 +285,7 @@
 
         .row-header {
             width: 40px;
-            min-height: 20px;
+            min-height: 16px;
             border: 1px solid;
             display: flex;
             align-items: center;
@@ -282,6 +316,11 @@
             color: #fff !important;
         }
 
+        .row-header.separator {
+            background-color: #808080 !important;
+            cursor: pointer;
+        }
+
         .table-main {
             flex: 1;
             display: flex;
@@ -296,7 +335,6 @@
         }
 
         .column-header {
-            min-width: 60px;
             height: 24px;
             border: 1px solid;
             display: flex;
@@ -307,6 +345,7 @@
             font-weight: bold;
             font-size: 10px;
             flex-shrink: 0;
+            padding: 0 4px;
         }
 
         body.light .column-header {
@@ -403,17 +442,26 @@
 
                 <div class="button-separator"></div>
 
+                <div class="select-group">
+                    <label for="fontSelect">Шрифт:</label>
+                    <select id="fontSelect" onchange="changeFont()">
+                        <option value="Iosevka Fixed">Iosevka Fixed</option>
+                        <option value="Courier New">Courier New</option>
+                        <option value="Consolas">Consolas</option>
+                        <option value="Monaco">Monaco</option>
+                        <option value="Menlo">Menlo</option>
+                        <option value="Lucida Console">Lucida Console</option>
+                        <option value="monospace">Monospace</option>
+                    </select>
+                </div>
+
                 <div class="checkbox-group">
-                    <input type="checkbox" id="noSeparator" onchange="handleSeparatorChange()">
-                    <label for="noSeparator">Без разделителя</label>
+                    <input type="checkbox" id="noSeparator" onchange="convertToMarkdown()">
+                    <label for="noSeparator">Без разделителей</label>
                 </div>
                 <div class="checkbox-group">
                     <input type="checkbox" id="alignWidth" onchange="convertToMarkdown()">
                     <label for="alignWidth">Выровнять по ширине</label>
-                </div>
-                <div class="checkbox-group">
-                    <input type="checkbox" id="multiline" onchange="handleMultilineChange()">
-                    <label for="multiline">Многострочный режим</label>
                 </div>
                 <div class="checkbox-group">
                     <input type="checkbox" id="wrapLines" onchange="toggleWrap()">
@@ -448,7 +496,7 @@
 
     <script>
         // Глобальные переменные
-        let tableData = [];
+        let tableData = []; // Массив объектов: { type: 'row'|'separator', data: [...] }
         let selectedColumns = new Set();
         let selectedRows = new Set();
         let lastSelectedColumn = -1;
@@ -474,7 +522,21 @@
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.body.classList.remove('light', 'dark');
             document.body.classList.add(savedTheme);
+
+            const savedFont = localStorage.getItem('font') || 'Iosevka Fixed';
+            document.getElementById('fontSelect').value = savedFont;
+            changeFont();
         });
+
+        // Смена шрифта
+        function changeFont() {
+            const font = document.getElementById('fontSelect').value;
+            document.body.style.fontFamily = `'${font}', monospace`;
+            localStorage.setItem('font', font);
+
+            // Перерисовываем заголовки с новой шириной
+            updateHeaders();
+        }
 
         // Переключение переноса строк
         function toggleWrap() {
@@ -488,35 +550,6 @@
                 output.classList.add('no-wrap');
                 output.style.whiteSpace = 'pre';
             }
-        }
-
-        // Обработка взаимоисключающих опций
-        function handleSeparatorChange() {
-            const noSeparator = document.getElementById('noSeparator');
-            const multiline = document.getElementById('multiline');
-
-            if (noSeparator.checked) {
-                multiline.checked = false;
-                multiline.disabled = true;
-            } else {
-                multiline.disabled = false;
-            }
-
-            convertToMarkdown();
-        }
-
-        function handleMultilineChange() {
-            const noSeparator = document.getElementById('noSeparator');
-            const multiline = document.getElementById('multiline');
-
-            if (multiline.checked) {
-                noSeparator.checked = false;
-                noSeparator.disabled = true;
-            } else {
-                noSeparator.disabled = false;
-            }
-
-            convertToMarkdown();
         }
 
         function clearInput() {
@@ -561,7 +594,25 @@
                 return;
             }
 
-            tableData = rows;
+            // Преобразуем в формат с разделителями
+            tableData = [];
+            const noSeparator = document.getElementById('noSeparator').checked;
+
+            if (rows.length > 0) {
+                // Первая строка (заголовок)
+                tableData.push({ type: 'row', data: rows[0] });
+
+                if (!noSeparator) {
+                    // Добавляем разделитель после заголовка
+                    tableData.push({ type: 'separator', columns: rows[0].length });
+                }
+
+                // Остальные строки
+                for (let i = 1; i < rows.length; i++) {
+                    tableData.push({ type: 'row', data: rows[i] });
+                }
+            }
+
             checkRepeatAvailability();
             updateMarkdown();
         }
@@ -569,7 +620,9 @@
         function checkRepeatAvailability() {
             const repeatBtn = document.getElementById('repeatBtn');
             if (deletedColumns.length > 0 && tableData.length > 0) {
-                const maxCol = Math.max(...tableData.map(row => row.length));
+                const maxCol = Math.max(...tableData
+                    .filter(row => row.type === 'row')
+                    .map(row => row.data.length));
                 const validDeletions = deletedColumns.every(col => col < maxCol);
                 repeatBtn.disabled = !validDeletions;
             } else {
@@ -579,9 +632,40 @@
 
         function updateMarkdown() {
             const markdown = generateMarkdown();
-            document.getElementById('output').value = markdown;
+            const output = document.getElementById('output');
+            output.value = markdown;
+
+            // Автоматическая высота (10-30 строк)
+            const lines = markdown.split('\n').length;
+            const targetLines = Math.max(10, Math.min(30, lines));
+            output.style.height = (targetLines * 16) + 'px'; // ~16px на строку
+
             updateHeaders();
             updateSelection();
+        }
+
+        function calculateColumnWidths() {
+            const dataRows = tableData.filter(row => row.type === 'row');
+            if (dataRows.length === 0) return [];
+
+            const maxCols = Math.max(...dataRows.map(row => row.data.length));
+            const widths = new Array(maxCols).fill(0);
+
+            dataRows.forEach(row => {
+                row.data.forEach((cell, i) => {
+                    widths[i] = Math.max(widths[i] || 0, cell.length);
+                });
+            });
+
+            return widths;
+        }
+
+        function getTextWidth(text) {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            const font = document.getElementById('fontSelect').value;
+            context.font = `11px '${font}', monospace`;
+            return context.measureText(text).width;
         }
 
         function updateHeaders() {
@@ -593,7 +677,10 @@
 
             if (tableData.length === 0) return;
 
-            const maxCols = Math.max(...tableData.map(row => row.length));
+            const dataRows = tableData.filter(row => row.type === 'row');
+            const maxCols = Math.max(...dataRows.map(row => row.data.length));
+            const columnWidths = calculateColumnWidths();
+            const alignWidth = document.getElementById('alignWidth').checked;
 
             // Создаем заголовки колонок
             for (let i = 0; i < maxCols; i++) {
@@ -601,6 +688,17 @@
                 header.className = 'column-header';
                 header.textContent = getColumnName(i);
                 header.dataset.column = i;
+
+                // Вычисляем ширину по содержимому колонки
+                if (alignWidth && columnWidths[i]) {
+                    const sampleText = 'X'.repeat(columnWidths[i]);
+                    const width = getTextWidth(sampleText) + 12; // +12 для padding
+                    header.style.width = width + 'px';
+                } else {
+                    header.style.width = 'auto';
+                    header.style.minWidth = '30px';
+                }
+
                 header.onclick = (e) => selectColumn(i, e);
                 header.oncontextmenu = (e) => {
                     e.preventDefault();
@@ -615,11 +713,18 @@
                 columnHeaders.appendChild(header);
             }
 
-            // Создаем заголовки строк
-            for (let i = 0; i < tableData.length; i++) {
+            // Создаем заголовки строк (включая разделители)
+            tableData.forEach((row, i) => {
                 const header = document.createElement('div');
                 header.className = 'row-header';
-                header.textContent = i + 1;
+
+                if (row.type === 'separator') {
+                    header.classList.add('separator');
+                    header.textContent = '---';
+                } else {
+                    header.textContent = i + 1;
+                }
+
                 header.dataset.row = i;
                 header.onclick = (e) => selectRow(i, e);
                 header.oncontextmenu = (e) => {
@@ -633,7 +738,7 @@
                     showContextMenu(e);
                 };
                 rowHeadersContainer.appendChild(header);
-            }
+            });
         }
 
         function selectColumn(colIndex, event) {
@@ -685,18 +790,15 @@
         }
 
         function updateSelection() {
-            // Убираем все выделения
             document.querySelectorAll('.column-header, .row-header').forEach(el => {
                 el.classList.remove('selected');
             });
 
-            // Выделяем заголовки колонок
             selectedColumns.forEach(colIndex => {
                 const header = document.querySelector(`.column-header[data-column="${colIndex}"]`);
                 if (header) header.classList.add('selected');
             });
 
-            // Выделяем заголовки строк
             selectedRows.forEach(rowIndex => {
                 const header = document.querySelector(`.row-header[data-row="${rowIndex}"]`);
                 if (header) header.classList.add('selected');
@@ -720,7 +822,14 @@
             if (selectedColumns.size > 0) {
                 deletedColumns = Array.from(selectedColumns).sort((a, b) => a - b);
                 tableData = tableData.map(row => {
-                    return row.filter((_, index) => !selectedColumns.has(index));
+                    if (row.type === 'row') {
+                        return {
+                            type: 'row',
+                            data: row.data.filter((_, index) => !selectedColumns.has(index))
+                        };
+                    } else {
+                        return row; // Разделитель остается
+                    }
                 });
                 selectedColumns.clear();
             } else if (selectedRows.size > 0) {
@@ -737,7 +846,14 @@
             if (deletedColumns.length === 0) return;
 
             tableData = tableData.map(row => {
-                return row.filter((_, index) => !deletedColumns.includes(index));
+                if (row.type === 'row') {
+                    return {
+                        type: 'row',
+                        data: row.data.filter((_, index) => !deletedColumns.includes(index))
+                    };
+                } else {
+                    return row;
+                }
             });
 
             selectedColumns.clear();
@@ -761,64 +877,41 @@
         function generateMarkdown() {
             if (tableData.length === 0) return '';
 
-            const noSeparator = document.getElementById('noSeparator').checked;
             const alignWidth = document.getElementById('alignWidth').checked;
-            const multiline = document.getElementById('multiline').checked;
-
             let result = [];
             let columnWidths = [];
 
             if (alignWidth) {
-                const numColumns = Math.max(...tableData.map(row => row.length));
-                columnWidths = new Array(numColumns).fill(0);
-
-                tableData.forEach(row => {
-                    row.forEach((cell, i) => {
-                        columnWidths[i] = Math.max(columnWidths[i] || 0, cell.length);
-                    });
-                });
+                columnWidths = calculateColumnWidths();
             }
 
-            function formatRow(row) {
+            function formatRow(rowData) {
                 if (alignWidth) {
-                    return '| ' + row.map((cell, i) =>
-                        padString(cell, columnWidths[i])
+                    return '| ' + rowData.map((cell, i) =>
+                        padString(cell, columnWidths[i] || 3)
                     ).join(' | ') + ' |';
                 } else {
-                    return '| ' + row.join(' | ') + ' |';
+                    return '| ' + rowData.join(' | ') + ' |';
                 }
             }
 
             function createSeparator(numColumns) {
                 if (alignWidth) {
                     return '| ' + columnWidths.slice(0, numColumns).map(width =>
-                        '-'.repeat(width)
+                        '-'.repeat(width || 3)
                     ).join(' | ') + ' |';
                 } else {
                     return '| ' + Array(numColumns).fill('---').join(' | ') + ' |';
                 }
             }
 
-            if (multiline) {
-                tableData.forEach((row, index) => {
-                    result.push(formatRow(row));
-                    if (index < tableData.length - 1) {
-                        result.push(createSeparator(row.length));
-                    }
-                });
-            } else {
-                if (tableData.length > 0) {
-                    result.push(formatRow(tableData[0]));
-
-                    if (!noSeparator) {
-                        result.push(createSeparator(tableData[0].length));
-                    }
-
-                    for (let i = 1; i < tableData.length; i++) {
-                        result.push(formatRow(tableData[i]));
-                    }
+            tableData.forEach(row => {
+                if (row.type === 'row') {
+                    result.push(formatRow(row.data));
+                } else if (row.type === 'separator') {
+                    result.push(createSeparator(row.columns));
                 }
-            }
+            });
 
             return result.join('\n');
         }
